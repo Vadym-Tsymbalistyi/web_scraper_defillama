@@ -1,30 +1,39 @@
-# Defillama Scraper
-├web_scraper_defillama/
+# 🕸️ Defillama Scraper
+
+Python-based web scraper for collecting and storing data from Defillama.
+
+---
+
+## 📁 Project Structure
+
+```plaintext
+web_scraper_defillama/
 │
-├── config/                # Configuration module
+├── config/
 │   └── config.py
 │
-├── data/                  # Stores input/output JSON files
+├── data/
 │   ├── config.json
 │   └── data.json
 │
-├── logs/                  # Logging output
+├── logs/
 │   └── scraper.log
 │
-├── scraper/               # Scraper logic
+├── scraper/
 │   └── scraper.py
 │
-├── test/                  # Unit tests
+├── test/
 │   └── _get_elements.test.py
 │
-├── utils/                 # Utility modules
+├── utils/
 │   ├── driver.py
 │   ├── logger_setup.py
 │   └── storage.py
 │
-├── main.py                # Entry point
+├── main.py
 ├── .gitignore
-└── README.md              # You are here
+└── README.md 
+ ```
 ## Getting Started
 
 To get started with the project, follow these steps:
