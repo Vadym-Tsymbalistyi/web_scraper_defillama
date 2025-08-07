@@ -1,40 +1,37 @@
-# 🕸️ Defillama Scraper
+# Defillama Scraper
 
-Python-based web scraper for collecting and storing data from Defillama.
+<!-- TODO: add info about the goal and technologies used -->
 
----
+## Project Structure & Artifacts
 
-## 📁 Project Structure
+```
+├web_scraper_defillama/
+│
+├── config/                # Configuration module
+│   └── app.yaml           # App configuration (input / output, pulling interval, etc.)
+│   └── logging.json       # Logging configuration
+│
+├── src/                   
+│   ├── scraper/...        # The main bussiness logic
+│   ├── utils/...          # Utility modules
+|
+├── tests/...              # Unit tests
+│
+├── main.py                # Entry point
+|
+├── logs/...               # Logger output 
+|
+├── scraper_results/...    # Results of scrapping
+│
+|
+└── README.md              # The main documentation
+|
+└── requirements.txt       # Required Python dependencies
+|
+├── .gitignore             # Git ignore config
+```
 
-```plaintext
-web_scraper_defillama/
-│
-├── config/
-│   └── config.py
-│
-├── data/
-│   ├── config.json
-│   └── data.json
-│
-├── logs/
-│   └── scraper.log
-│
-├── scraper/
-│   └── scraper.py
-│
-├── test/
-│   └── _get_elements.test.py
-│
-├── utils/
-│   ├── driver.py
-│   ├── logger_setup.py
-│   └── storage.py
-│
-├── main.py
-├── .gitignore
-└── README.md 
- ```
-## Getting Started
+## Getting Started / Demo Run
 
 To get started with the project, follow these steps:
 
@@ -48,7 +45,7 @@ To get started with the project, follow these steps:
     ```bash
     cd web_scraper_defillama
     ```
-    
+
 3. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
@@ -58,37 +55,54 @@ To get started with the project, follow these steps:
     ```bash
     python main.py
     ```
-   
 
-## 1. Configuration
+## Configuration
 
-The script uses a `config.json` file for settings. If the file does not exist, it will be created automatically with default values:
+The App uses a [config/app.yamp](config/app.yaml) file for settings.
 
-| Parameter | Type       | Description                               | Default Value             |
-|-----------|------------|-------------------------------------------|---------------------------|
-| interval  | int        | Restart cycle interval in seconds         | 300                       |
-| proxies   | list[str]  | List of proxy servers as strings           | Empty list (`[]`)          |
-
----
-
-## 2. Logging Setup
-
-- Logs are automatically saved to `scraper.log`.
-- Logging is done both to the file and the console.
+| Parameter                    | Type      | Description                                        | Default Value                |
+|------------------------------|-----------|----------------------------------------------------|------------------------------|
+| target_url                   | str       | Target URL of defillama website page to scrap      | https://defillama.com/chains |
+| pulling_interval_in_sec      | int       | Data Pulling / scraping interval in seconds        | 300                          |
+| proxies                      | list[str] | List of proxy servers as strings                   | Empty list (`[]`)            |
+| result_output_base_dir       | str       | Path to results directory                          | scraper_results              |
+| result_output_base_file_name | str       | File name prefix to use for storing data snapshots | data_snapshot                |
 
 ---
 
-## 3. Data Storage
+## Logging Setup
 
-### Location
+The logging configuration [config/logging.yaml](config/logging.yaml)
+By default, logs are saved to the file `logs/app.log` and streamed to the console.
 
-All scraped data is automatically saved in `data.json` at the project root.
+---
 
-### Data Format
+## Result Data
 
-The data is stored in JSON format with the following structure:
+Each iteration of Scraper run produces a snapshot of page data in this time, for example:
+
+```
+├── scraper_results/                   
+│   ├── data_snapshot_2025-08-07_20-10-05.json
+│   ├── data_snapshot_2025-08-07_20-15-20.json
+│ 
+```
+
+---
+
+### Result Data Model & Format
+
+<!-- TODO: add more info -->
+The following info is extracted from the website:
+
+* Name: String
+* Protocols: String
+* TVL: String
+
+The data is stored in JSON format in the following structure:
 
 ```json
+[
   {
     "Name": "Ethereum",
     "Protocols": "1568",
@@ -103,4 +117,17 @@ The data is stored in JSON format with the following structure:
     "Name": "BSC",
     "Protocols": "987",
     "TVL": "$6,794b"
-  },
+  }
+]
+```
+
+See [scraper_results/](scraper_results/) for more examples.
+--- 
+
+## Unit testing
+
+The command to run the tests:
+
+```bash
+pytest tests
+```
