@@ -1,0 +1,6 @@
+app:
+  target_url: https://defillama.com/chains
+  pulling_interval_in_sec: 300 # 5 min
+  proxies: []
+  result_output_base_dir: scraper_results
+  result_output_base_file_name: data_snapshot
