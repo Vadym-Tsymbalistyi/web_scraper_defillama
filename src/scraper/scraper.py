@@ -1,20 +1,21 @@
-import time
-import random
 import logging
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import StaleElementReferenceException
+import random
+import time
 
-# TODO: move to app config
-BASE_URL = 'https://defillama.com/chains'
+from selenium import webdriver
+from selenium.common.exceptions import InvalidSessionIdException
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class Scraper:
-    def __init__(self, proxies):
+    def __init__(self, target_url, proxies):
         self.__logger = logging.getLogger("Scraper")
+        self.__target_url = target_url
         self.__webdriver = self.__create_webdriver(proxies)
+        self.__scroll_step = 500
 
     def __create_webdriver(self, proxies):
         options = webdriver.ChromeOptions()
@@ -41,36 +42,38 @@ class Scraper:
 
     def scrape_page(self):
         try:
-            self.__webdriver.get(BASE_URL)
-            WebDriverWait(self.__webdriver, 5).until(
+            self.__webdriver.get(self.__target_url)
+            driver_wait_timeout_in_sec = 5
+            WebDriverWait(self.__webdriver, driver_wait_timeout_in_sec).until(
                 EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div[style*='translateY']"))
             )
             return self.scroll_page_and_extract_data()
 
+        except InvalidSessionIdException:
+            self.__logger.warning("Browser Session issue, restarting...:")
         except Exception as e:
             self.__logger.error(f"Error while scraping page: {e}")
             raise
 
     def scroll_page_and_extract_data(self):
-        scroll_step = 500
         current_position = 100
         last_height = self.__webdriver.execute_script("return document.body.scrollHeight")
         self.__logger.info("Starting to scroll the page...")
 
-        collected_data = []
+        extract_data = []
 
         while current_position < last_height:
             self.__logger.debug(f"current_position: {current_position}")
 
             self.__webdriver.execute_script(f"window.scrollTo(0, {current_position});")
             time.sleep(0.01)
-            current_position += scroll_step
+            current_position += self.__scroll_step
             last_height = self.__webdriver.execute_script("return document.body.scrollHeight")
 
             elements = self.__webdriver.find_elements(By.CSS_SELECTOR, "div[style*='translateY']")
-            collected_data.extend(self.extract_data(elements))
+            extract_data.extend(self.extract_data(elements))
 
-        return collected_data
+        return extract_data
 
     def extract_data(self, elements):
         extracted = []
