@@ -83,8 +83,8 @@ Each iteration of Scraper run produces a snapshot of page data in this time, for
 
 ```
 ├── scraper_results/                   
-│   ├── data_snapshot_2025-08-07_20-10-05.json
-│   ├── data_snapshot_2025-08-07_20-15-20.json
+│   ├── data_snapshot_2025-08-08_07-48-26.json
+│   ├── data_snapshot_2025-08-08_08-43-39.json
 │ 
 ```
 
